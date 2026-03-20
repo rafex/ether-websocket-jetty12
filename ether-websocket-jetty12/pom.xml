@@ -7,13 +7,13 @@
 	<parent>
 		<groupId>dev.rafex.ether.parent</groupId>
 		<artifactId>ether-parent</artifactId>
-		<version>5.0.1-v20260304</version>
+		<version>8.0.0-SNAPSHOT</version>
 		<relativePath>../../ether-parent/ether-parent/pom.xml</relativePath>
 	</parent>
 
 	<groupId>dev.rafex.ether.websocket</groupId>
 	<artifactId>ether-websocket-jetty12</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>8.0.0-SNAPSHOT</version>
 
 	<packaging>jar</packaging>
 	<name>${project.artifactId}</name>
@@ -56,30 +56,24 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<ether-websocket-core.version>1.0.0-SNAPSHOT</ether-websocket-core.version>
-		<jetty.version>12.1.6</jetty.version>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>dev.rafex.ether.websocket</groupId>
 			<artifactId>ether-websocket-core</artifactId>
-			<version>${ether-websocket-core.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-server</artifactId>
-			<version>${jetty.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty.websocket</groupId>
 			<artifactId>jetty-websocket-jetty-api</artifactId>
-			<version>${jetty.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty.websocket</groupId>
 			<artifactId>jetty-websocket-jetty-server</artifactId>
-			<version>${jetty.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>

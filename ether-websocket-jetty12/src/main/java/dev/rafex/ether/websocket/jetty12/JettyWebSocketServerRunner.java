@@ -30,25 +30,25 @@ import org.eclipse.jetty.server.Server;
 
 public final class JettyWebSocketServerRunner {
 
-	private final Server server;
+    private final Server server;
 
-	JettyWebSocketServerRunner(final Server server) {
-		this.server = server;
-	}
+    JettyWebSocketServerRunner(final Server server) {
+        this.server = server;
+    }
 
-	public void start() throws Exception {
-		server.start();
-	}
+    public void start() throws Exception {
+        server.start();
+    }
 
-	public void join() throws InterruptedException {
-		server.join();
-	}
+    public void join() throws InterruptedException {
+        server.join();
+    }
 
-	public void stop() throws Exception {
-		server.stop();
-	}
+    public void stop() throws Exception {
+        server.stop();
+    }
 
-	public Server server() {
-		return server;
-	}
+    public Server server() {
+        return server;
+    }
 }

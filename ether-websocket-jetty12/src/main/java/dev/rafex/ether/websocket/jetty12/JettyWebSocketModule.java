@@ -28,6 +28,6 @@ package dev.rafex.ether.websocket.jetty12;
 
 public interface JettyWebSocketModule {
 
-	default void registerRoutes(final JettyWebSocketRouteRegistry routes, final JettyWebSocketModuleContext context) {
-	}
+    default void registerRoutes(final JettyWebSocketRouteRegistry routes, final JettyWebSocketModuleContext context) {
+    }
 }

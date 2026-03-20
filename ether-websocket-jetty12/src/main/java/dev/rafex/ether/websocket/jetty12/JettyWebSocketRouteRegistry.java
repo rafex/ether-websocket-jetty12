@@ -34,13 +34,13 @@ import dev.rafex.ether.websocket.core.WebSocketRoute;
 
 public final class JettyWebSocketRouteRegistry {
 
-	private final List<WebSocketRoute> routes = new ArrayList<>();
+    private final List<WebSocketRoute> routes = new ArrayList<>();
 
-	public void add(final String pattern, final WebSocketEndpoint endpoint) {
-		routes.add(WebSocketRoute.of(pattern, endpoint));
-	}
+    public void add(final String pattern, final WebSocketEndpoint endpoint) {
+        routes.add(WebSocketRoute.of(pattern, endpoint));
+    }
 
-	public List<WebSocketRoute> routes() {
-		return List.copyOf(routes);
-	}
+    public List<WebSocketRoute> routes() {
+        return List.copyOf(routes);
+    }
 }

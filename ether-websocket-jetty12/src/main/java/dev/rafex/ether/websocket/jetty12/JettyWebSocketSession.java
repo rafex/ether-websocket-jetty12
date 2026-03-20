@@ -44,133 +44,134 @@ import dev.rafex.ether.websocket.core.WebSocketSession;
 
 public final class JettyWebSocketSession implements WebSocketSession {
 
-	private final Session session;
-	private final String path;
-	private final Map<String, String> pathParams;
-	private final Map<String, List<String>> queryParams;
-	private final Map<String, List<String>> headers;
-	private final Map<String, Object> attributes = new ConcurrentHashMap<>();
+    private final Session session;
+    private final String path;
+    private final Map<String, String> pathParams;
+    private final Map<String, List<String>> queryParams;
+    private final Map<String, List<String>> headers;
+    private final Map<String, Object> attributes = new ConcurrentHashMap<>();
 
-	public JettyWebSocketSession(final Session session, final String path, final Map<String, String> pathParams,
-			final Map<String, List<String>> queryParams, final Map<String, List<String>> headers) {
-		this.session = Objects.requireNonNull(session, "session");
-		this.path = Objects.requireNonNull(path, "path");
-		this.pathParams = Map.copyOf(pathParams);
-		this.queryParams = copyMultiMap(queryParams);
-		this.headers = copyMultiMap(headers);
-	}
+    public JettyWebSocketSession(final Session session, final String path, final Map<String, String> pathParams,
+            final Map<String, List<String>> queryParams, final Map<String, List<String>> headers) {
+        this.session = Objects.requireNonNull(session, "session");
+        this.path = Objects.requireNonNull(path, "path");
+        this.pathParams = Map.copyOf(pathParams);
+        this.queryParams = copyMultiMap(queryParams);
+        this.headers = copyMultiMap(headers);
+    }
 
-	@Override
-	public String id() {
-		return Integer.toHexString(System.identityHashCode(session));
-	}
+    @Override
+    public String id() {
+        return Integer.toHexString(System.identityHashCode(session));
+    }
 
-	@Override
-	public String path() {
-		return path;
-	}
+    @Override
+    public String path() {
+        return path;
+    }
 
-	@Override
-	public String subprotocol() {
-		final var protocol = session.getUpgradeResponse() == null ? null : session.getUpgradeResponse().getAcceptedSubProtocol();
-		return protocol == null ? "" : protocol;
-	}
+    @Override
+    public String subprotocol() {
+        final var protocol = session.getUpgradeResponse() == null ? null
+                : session.getUpgradeResponse().getAcceptedSubProtocol();
+        return protocol == null ? "" : protocol;
+    }
 
-	@Override
-	public boolean isOpen() {
-		return session.isOpen();
-	}
+    @Override
+    public boolean isOpen() {
+        return session.isOpen();
+    }
 
-	@Override
-	public String pathParam(final String name) {
-		return pathParams.get(name);
-	}
+    @Override
+    public String pathParam(final String name) {
+        return pathParams.get(name);
+    }
 
-	@Override
-	public String queryFirst(final String name) {
-		final var values = queryParams.get(name);
-		if (values == null || values.isEmpty()) {
-			return null;
-		}
-		return values.get(0);
-	}
+    @Override
+    public String queryFirst(final String name) {
+        final var values = queryParams.get(name);
+        if (values == null || values.isEmpty()) {
+            return null;
+        }
+        return values.get(0);
+    }
 
-	@Override
-	public List<String> queryAll(final String name) {
-		return queryParams.getOrDefault(name, List.of());
-	}
+    @Override
+    public List<String> queryAll(final String name) {
+        return queryParams.getOrDefault(name, List.of());
+    }
 
-	@Override
-	public String headerFirst(final String name) {
-		final var values = headers.get(name);
-		if (values == null || values.isEmpty()) {
-			return null;
-		}
-		return values.get(0);
-	}
+    @Override
+    public String headerFirst(final String name) {
+        final var values = headers.get(name);
+        if (values == null || values.isEmpty()) {
+            return null;
+        }
+        return values.get(0);
+    }
 
-	@Override
-	public Object attribute(final String name) {
-		return attributes.get(name);
-	}
+    @Override
+    public Object attribute(final String name) {
+        return attributes.get(name);
+    }
 
-	@Override
-	public void attribute(final String name, final Object value) {
-		if (value == null) {
-			attributes.remove(name);
-			return;
-		}
-		attributes.put(name, value);
-	}
+    @Override
+    public void attribute(final String name, final Object value) {
+        if (value == null) {
+            attributes.remove(name);
+            return;
+        }
+        attributes.put(name, value);
+    }
 
-	@Override
-	public Map<String, String> pathParams() {
-		return pathParams;
-	}
+    @Override
+    public Map<String, String> pathParams() {
+        return pathParams;
+    }
 
-	@Override
-	public Map<String, List<String>> queryParams() {
-		return queryParams;
-	}
+    @Override
+    public Map<String, List<String>> queryParams() {
+        return queryParams;
+    }
 
-	@Override
-	public Map<String, List<String>> headers() {
-		return headers;
-	}
+    @Override
+    public Map<String, List<String>> headers() {
+        return headers;
+    }
 
-	@Override
-	public CompletionStage<Void> sendText(final String text) {
-		final var future = new CompletableFuture<Void>();
-		session.sendText(text, callbackOf(future));
-		return future;
-	}
+    @Override
+    public CompletionStage<Void> sendText(final String text) {
+        final var future = new CompletableFuture<Void>();
+        session.sendText(text, callbackOf(future));
+        return future;
+    }
 
-	@Override
-	public CompletionStage<Void> sendBinary(final ByteBuffer data) {
-		final var future = new CompletableFuture<Void>();
-		session.sendBinary(data == null ? ByteBuffer.allocate(0) : data.slice(), callbackOf(future));
-		return future;
-	}
+    @Override
+    public CompletionStage<Void> sendBinary(final ByteBuffer data) {
+        final var future = new CompletableFuture<Void>();
+        session.sendBinary(data == null ? ByteBuffer.allocate(0) : data.slice(), callbackOf(future));
+        return future;
+    }
 
-	@Override
-	public CompletionStage<Void> close(final WebSocketCloseStatus status) {
-		final var future = new CompletableFuture<Void>();
-		final var closeStatus = status == null ? WebSocketCloseStatus.NORMAL : status;
-		session.close(closeStatus.code(), closeStatus.reason(), callbackOf(future));
-		return future;
-	}
+    @Override
+    public CompletionStage<Void> close(final WebSocketCloseStatus status) {
+        final var future = new CompletableFuture<Void>();
+        final var closeStatus = status == null ? WebSocketCloseStatus.NORMAL : status;
+        session.close(closeStatus.code(), closeStatus.reason(), callbackOf(future));
+        return future;
+    }
 
-	private static Callback callbackOf(final CompletableFuture<Void> future) {
-		return Callback.from(() -> future.complete(null), future::completeExceptionally);
-	}
+    private static Callback callbackOf(final CompletableFuture<Void> future) {
+        return Callback.from(() -> future.complete(null), future::completeExceptionally);
+    }
 
-	private static Map<String, List<String>> copyMultiMap(final Map<String, List<String>> input) {
-		final var out = new LinkedHashMap<String, List<String>>();
-		if (input != null) {
-			for (final var entry : input.entrySet()) {
-				out.put(entry.getKey(), entry.getValue() == null ? List.of() : List.copyOf(entry.getValue()));
-			}
-		}
-		return Collections.unmodifiableMap(out);
-	}
+    private static Map<String, List<String>> copyMultiMap(final Map<String, List<String>> input) {
+        final var out = new LinkedHashMap<String, List<String>>();
+        if (input != null) {
+            for (final var entry : input.entrySet()) {
+                out.put(entry.getKey(), entry.getValue() == null ? List.of() : List.copyOf(entry.getValue()));
+            }
+        }
+        return Collections.unmodifiableMap(out);
+    }
 }

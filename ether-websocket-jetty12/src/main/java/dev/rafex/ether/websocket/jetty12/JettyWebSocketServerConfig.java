@@ -29,26 +29,27 @@ package dev.rafex.ether.websocket.jetty12;
 import java.util.Map;
 
 public record JettyWebSocketServerConfig(int port, int minThreads, int maxThreads, int idleTimeoutMs,
-		String threadPoolName) {
+        String threadPoolName) {
 
-	public static JettyWebSocketServerConfig fromEnv() {
-		return fromEnv(System.getenv());
-	}
+    public static JettyWebSocketServerConfig fromEnv() {
+        return fromEnv(System.getenv());
+    }
 
-	public static JettyWebSocketServerConfig fromEnv(final Map<String, String> env) {
-		return new JettyWebSocketServerConfig(parseInt(env.get("HTTP_PORT"), 8080), parseInt(env.get("HTTP_MIN_THREADS"), 4),
-				parseInt(env.get("HTTP_MAX_THREADS"), 32), parseInt(env.get("HTTP_IDLE_TIMEOUT_MS"), 30_000),
-				env.getOrDefault("HTTP_POOL_NAME", "ether-websocket"));
-	}
+    public static JettyWebSocketServerConfig fromEnv(final Map<String, String> env) {
+        return new JettyWebSocketServerConfig(parseInt(env.get("HTTP_PORT"), 8080),
+                parseInt(env.get("HTTP_MIN_THREADS"), 4), parseInt(env.get("HTTP_MAX_THREADS"), 32),
+                parseInt(env.get("HTTP_IDLE_TIMEOUT_MS"), 30_000),
+                env.getOrDefault("HTTP_POOL_NAME", "ether-websocket"));
+    }
 
-	private static int parseInt(final String value, final int fallback) {
-		if (value == null || value.isBlank()) {
-			return fallback;
-		}
-		try {
-			return Integer.parseInt(value.trim());
-		} catch (final NumberFormatException e) {
-			return fallback;
-		}
-	}
+    private static int parseInt(final String value, final int fallback) {
+        if (value == null || value.isBlank()) {
+            return fallback;
+        }
+        try {
+            return Integer.parseInt(value.trim());
+        } catch (final NumberFormatException e) {
+            return fallback;
+        }
+    }
 }
