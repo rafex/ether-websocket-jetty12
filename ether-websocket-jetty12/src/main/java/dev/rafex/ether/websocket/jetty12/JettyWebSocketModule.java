@@ -26,8 +26,25 @@ package dev.rafex.ether.websocket.jetty12;
  * #L%
  */
 
+/**
+ * SPI contract for WebSocket modules that register endpoint routes.
+ *
+ * <p>Implementations define which WebSocket endpoints the application exposes
+ * by calling {@link JettyWebSocketRouteRegistry#add} inside
+ * {@link #registerRoutes}. The framework invokes this method once during
+ * server bootstrap, passing the shared registry and a read-only context.</p>
+ */
 public interface JettyWebSocketModule {
 
+    /**
+     * Registers WebSocket routes on the given registry.
+     *
+     * <p>The default implementation is a no-op, so modules only need to
+     * override this method when they expose actual endpoints.</p>
+     *
+     * @param routes  the route registry to register endpoints on
+     * @param context the module context providing server configuration
+     */
     default void registerRoutes(final JettyWebSocketRouteRegistry routes, final JettyWebSocketModuleContext context) {
     }
 }

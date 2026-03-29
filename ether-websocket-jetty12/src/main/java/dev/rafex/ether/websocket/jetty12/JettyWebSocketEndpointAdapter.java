@@ -36,6 +36,12 @@ import org.eclipse.jetty.websocket.api.Session;
 import dev.rafex.ether.websocket.core.WebSocketCloseStatus;
 import dev.rafex.ether.websocket.core.WebSocketEndpoint;
 
+/**
+ * Adapta una instancia de {@link WebSocketEndpoint} al Listener de Jetty 12.
+ *
+ * <p>Esta clase traduce los eventos del ciclo de vida de Jetty a las llamadas
+ * definidas en la interfaz {@link WebSocketEndpoint}.</p>
+ */
 final class JettyWebSocketEndpointAdapter implements Session.Listener.AutoDemanding {
 
     private final WebSocketEndpoint endpoint;
@@ -45,6 +51,15 @@ final class JettyWebSocketEndpointAdapter implements Session.Listener.AutoDemand
     private final Map<String, List<String>> headers;
     private volatile JettyWebSocketSession session;
 
+    /**
+     * Crea un adaptador para el endpoint dado.
+     *
+     * @param endpoint   el endpoint personalizado que manejará los eventos
+     * @param path       la ruta asociada a la conexión
+     * @param pathParams parámetros extraídos de la ruta
+     * @param queryParams parámetros de la consulta HTTP
+     * @param headers    cabeceras HTTP
+     */
     JettyWebSocketEndpointAdapter(final WebSocketEndpoint endpoint, final String path,
             final Map<String, String> pathParams, final Map<String, List<String>> queryParams,
             final Map<String, List<String>> headers) {

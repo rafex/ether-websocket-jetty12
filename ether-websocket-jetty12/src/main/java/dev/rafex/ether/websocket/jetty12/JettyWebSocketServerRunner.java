@@ -28,26 +28,58 @@ package dev.rafex.ether.websocket.jetty12;
 
 import org.eclipse.jetty.server.Server;
 
+/**
+ * Thin wrapper around a Jetty {@link Server} that exposes lifecycle methods.
+ *
+ * <p>Created exclusively by {@link JettyWebSocketServerFactory}. Callers use
+ * {@link #start()}, {@link #join()} and {@link #stop()} to control the server
+ * lifecycle.</p>
+ */
 public final class JettyWebSocketServerRunner {
 
     private final Server server;
 
+    /**
+     * Package-private constructor. Use {@link JettyWebSocketServerFactory} instead.
+     *
+     * @param server the underlying Jetty server
+     */
     JettyWebSocketServerRunner(final Server server) {
         this.server = server;
     }
 
+    /**
+     * Starts the underlying Jetty server.
+     *
+     * @throws Exception if the server fails to start
+     */
     public void start() throws Exception {
         server.start();
     }
 
+    /**
+     * Blocks the calling thread until the server is stopped.
+     *
+     * @throws InterruptedException if the current thread is interrupted while waiting
+     */
     public void join() throws InterruptedException {
         server.join();
     }
 
+    /**
+     * Stops the underlying Jetty server.
+     *
+     * @throws Exception if the server fails to stop cleanly
+     */
     public void stop() throws Exception {
         server.stop();
     }
 
+    /**
+     * Returns the underlying Jetty {@link Server} for advanced use cases.
+     *
+     * @return the Jetty server instance
+     */
     public Server server() {
         return server;
     }
