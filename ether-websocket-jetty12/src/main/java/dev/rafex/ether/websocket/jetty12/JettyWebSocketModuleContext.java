@@ -26,5 +26,13 @@ package dev.rafex.ether.websocket.jetty12;
  * #L%
  */
 
+/**
+ * Read-only context passed to {@link JettyWebSocketModule#registerRoutes}.
+ *
+ * <p>Wraps the current {@link JettyWebSocketServerConfig} so modules can
+ * inspect server settings (port, thread pool, etc.) at registration time.</p>
+ *
+ * @param config the server configuration in effect
+ */
 public record JettyWebSocketModuleContext(JettyWebSocketServerConfig config) {
 }

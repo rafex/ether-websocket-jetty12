@@ -32,14 +32,32 @@ import java.util.List;
 import dev.rafex.ether.websocket.core.WebSocketEndpoint;
 import dev.rafex.ether.websocket.core.WebSocketRoute;
 
+/**
+ * Mutable registry that collects WebSocket routes during module registration.
+ *
+ * <p>Modules call {@link #add} to bind a URL path pattern to a
+ * {@link WebSocketEndpoint}. After all modules have been processed, the
+ * factory reads the accumulated routes via {@link #routes}.</p>
+ */
 public final class JettyWebSocketRouteRegistry {
 
     private final List<WebSocketRoute> routes = new ArrayList<>();
 
+    /**
+     * Registers a WebSocket endpoint under the given URL path pattern.
+     *
+     * @param pattern  the URL path pattern (e.g. {@code "/ws/{channel}"})
+     * @param endpoint the WebSocket endpoint to invoke when the pattern matches
+     */
     public void add(final String pattern, final WebSocketEndpoint endpoint) {
         routes.add(WebSocketRoute.of(pattern, endpoint));
     }
 
+    /**
+     * Returns an unmodifiable snapshot of all registered routes.
+     *
+     * @return a copy of the current route list
+     */
     public List<WebSocketRoute> routes() {
         return List.copyOf(routes);
     }
